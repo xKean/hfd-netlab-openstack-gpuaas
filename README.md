@@ -15,7 +15,7 @@ Alternatives that can be also be used to start instances are:
 
 Need access to "05)_AI-NetLab-Pro" VPN profile if you are using a network outside of Hochschule Fulda to be able to access our OpenStack env and obviously credentials for OpenStack:
 
-The script expects a "cloud.yaml" (example) file in the working directory containing credentials and API endpoints for OpenStack. You can also download cloud.yaml from Horizon web interface https://private-cloud.informatik.hs-fulda.de/project/api_access/clouds.yaml
+The script expects a "cloud.yaml" ([example](https://raw.githubusercontent.com/srieger1/hfd-netlab-openstack-gpuaas/main/cloud.yaml)) file in the working directory containing credentials and API endpoints for OpenStack. You can also download cloud.yaml from Horizon web interface https://private-cloud.informatik.hs-fulda.de/project/api_access/clouds.yaml
 
 After running the script you will get SSH access to an instance that offers direct PCI access (passthrough) to one of our NVIDIA RTX GPUs.
 
