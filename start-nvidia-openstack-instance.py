@@ -14,6 +14,8 @@
 #
 # The script expects a "cloud.yaml" file in the working directory containing credentials and API endpoints for OpenStack.
 # Be sure to use the "05)_AI-NetLab-Pro" VPN profile if you are using a network outside of Hochschule Fulda to be able to access our OpenStack env.
+# https://private-cloud.informatik.hs-fulda.de/project/api_access/clouds.yaml
+# You can add the password to clouds.yaml. See https://docs.openstack.org/python-openstackclient/latest/configuration/index.html
 #
 # After running the script you will get SSH access to an instance that offers direct PCI access (passthrough) to one of our NVIDIA RTX GPUs.
 # nvidia drivers and cuda are automatically installed (see cloud-init definition in the USERDATA var below). You can change the var content
