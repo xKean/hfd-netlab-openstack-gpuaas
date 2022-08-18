@@ -12,7 +12,7 @@
 # - Apache libcloud: https://libcloud.apache.org/
 # - ... ;)
 #
-# The script expects a "cloud.yaml" file in the working directory containing credentials and API endpoints for OpenStack.
+# The script expects a "clouds.yaml" file in the working directory containing credentials and API endpoints for OpenStack.
 # Be sure to use the "05)_AI-NetLab-Pro" VPN profile if you are using a network outside of Hochschule Fulda to be able to access our OpenStack env.
 # https://private-cloud.informatik.hs-fulda.de/project/api_access/clouds.yaml
 # You can add the password to clouds.yaml. See https://docs.openstack.org/python-openstackclient/latest/configuration/index.html
