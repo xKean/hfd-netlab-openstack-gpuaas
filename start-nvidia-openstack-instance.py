@@ -57,8 +57,17 @@ IMAGE_NAME = "Ubuntu 20.04 - Focal Fossa - 64-bit - Cloud Based Image"
 # You can create a new image by creating a snapshot of the instance that was started by this script
 # Snapshot can be created using CLI/API or web interface of OpenStack
 # IMAGE_NAME="my-snapshot-with-nvidia-stuff-installed"
+#
+# example:
+# IMAGE_NAME="Ubuntu-22.04-cuda11.7"
 
-FLAVOR_NAME = "g1.medium"
+FLAVOR_NAME = "1x2080.medium"
+#FLAVOR_NAME = "1x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
+#FLAVOR_NAME = "2x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
+#FLAVOR_NAME = "4x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
+#
+#FLAVOR_NAME = "1x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
+#FLAVOR_NAME = "2x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
 
 NETWORK_NAME = sys.argv[1] + "-net"
 
@@ -77,7 +86,7 @@ USERDATA = "#!/bin/bash\n" \
            "sudo apt update\n" \
            "sudo apt install -y build-essential\n" \
            "wget https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda_11.7.0_515.43.04_linux.run\n" \
-           "sudo sh /cuda_11.7.0_515.43.04_linux.run --silent --driver --toolkit --samples\n" \
+           "sudo sh ./cuda_11.7.0_515.43.04_linux.run --silent --driver --toolkit --samples\n" \
            "nvidia-smi\n" \
 
 
