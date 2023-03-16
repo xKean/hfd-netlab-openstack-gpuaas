@@ -11,6 +11,7 @@ clouds:
     auth:
       auth_url: https://private-cloud.informatik.hs-fulda.de:5000
       username: "<insert your user name>"
+      password: "<insert your password here>"
       project_id: <insert your project id here>
       project_name: "<insert your project name here>"
       user_domain_name: "Default"

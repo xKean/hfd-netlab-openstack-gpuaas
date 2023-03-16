@@ -4,6 +4,9 @@
 #
 # The script uses standard OpenStack Python API:
 # - https://docs.openstack.org/openstacksdk/latest/user/guides/intro.html
+#
+# can be installed using: "pip install openstacksdk" see also: https://docs.openstack.org/openstacksdk/latest/install/index.html
+#
 # Alternatives that can be also be used to start instances are:
 # - OpenStack Web Interface (Horizon): https://private-cloud.informatik.hs-fulda.de/
 # - OpenStack CLI client (use, e.g. "pip install openstack"): https://docs.openstack.org/newton/user-guide/common/cli-install-openstack-command-line-clients.html
@@ -62,12 +65,12 @@ IMAGE_NAME = "Ubuntu 20.04 - Focal Fossa - 64-bit - Cloud Based Image"
 # IMAGE_NAME="Ubuntu-22.04-cuda11.7"
 
 FLAVOR_NAME = "1x2080.medium"
-#FLAVOR_NAME = "1x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
-#FLAVOR_NAME = "2x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
-#FLAVOR_NAME = "4x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
+# FLAVOR_NAME = "1x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
+# FLAVOR_NAME = "2x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
+# FLAVOR_NAME = "4x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
 #
-#FLAVOR_NAME = "1x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
-#FLAVOR_NAME = "2x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
+# FLAVOR_NAME = "1x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
+# FLAVOR_NAME = "2x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
 
 NETWORK_NAME = sys.argv[1] + "-net"
 
@@ -79,16 +82,22 @@ IMPORT_EXISTING_PUBKEY_FILE = ""
 
 # initial installation using cloud-init
 #
-# to use other nvidia dirver/cuda versions etc., see nvidia documentation for ubuntu setup:
+# can be changed to install packages, configure instance etc. - see also: https://help.ubuntu.com/community/CloudInit
+#                                                                         https://cloudinit.readthedocs.io/en/latest/
+#
+
+USERDATA = "#!/bin/bash\n" \
+           "touch /tmp/cloud-init-was-executed"
+# to use other nvidia driver/cuda versions etc., see nvidia documentation for ubuntu setup:
 #   - https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
 #   - https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=20.04&target_type=runfile_local
-USERDATA = "#!/bin/bash\n" \
-           "sudo apt update\n" \
-           "sudo apt install -y build-essential\n" \
-           "wget https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda_11.7.0_515.43.04_linux.run\n" \
-           "sudo sh ./cuda_11.7.0_515.43.04_linux.run --silent --driver --toolkit --samples\n" \
-           "nvidia-smi\n" \
-
+#
+# USERDATA = "#!/bin/bash\n" \
+#            "sudo apt update\n" \
+#            "sudo apt install -y build-essential\n" \
+#            "wget https://developer.download.nvidia.com/compute/cuda/12.1.0/local_installers/cuda_12.1.0_530.30.02_linux.run\n" \
+#            "sudo sh ./cuda_12.1.0_530.30.02_linux.run --silent --driver --toolkit --samples\n" \
+#            "nvidia-smi\n" \
 
 ###########################
 #
@@ -140,7 +149,7 @@ keypair, ssh_privkey = get_keypair(conn)
 # to get a public IP address for it.
 
 # delete server if it already exists
-conn.delete_server(INSTANCE_NAME)
+# conn.delete_server(INSTANCE_NAME)
 
 server = conn.create_server(
   INSTANCE_NAME, image=image, flavor=flavor, network=network, key_name=keypair.name, userdata=USERDATA, wait=True, auto_ip=True)
