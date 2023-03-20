@@ -36,9 +36,11 @@
 # GPUs meanwhile.
 
 
+
 import openstack
 import os
 import sys
+
 
 
 ###########################
@@ -64,13 +66,13 @@ IMAGE_NAME = "Ubuntu 20.04 - Focal Fossa - 64-bit - Cloud Based Image"
 # example:
 # IMAGE_NAME="Ubuntu-22.04-cuda11.7"
 
-FLAVOR_NAME = "1x2080.medium"
-# FLAVOR_NAME = "1x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
-# FLAVOR_NAME = "2x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
-# FLAVOR_NAME = "4x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
+FLAVOR_NAME = "g1-1x2060.medium"
+# FLAVOR_NAME = "g1-1x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
+# FLAVOR_NAME = "g1-2x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
+# FLAVOR_NAME = "g1-4x2060.medium" NVIDIA Corporation TU106 [GeForce RTX 2060 SUPER]
 #
-# FLAVOR_NAME = "1x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
-# FLAVOR_NAME = "2x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
+# FLAVOR_NAME = "g1-1x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
+# FLAVOR_NAME = "g1-2x2080.medium" NVIDIA Corporation TU102 [GeForce RTX 2080 Ti Rev. A]
 
 NETWORK_NAME = sys.argv[1] + "-net"
 
@@ -98,6 +100,8 @@ USERDATA = "#!/bin/bash\n" \
 #            "wget https://developer.download.nvidia.com/compute/cuda/12.1.0/local_installers/cuda_12.1.0_530.30.02_linux.run\n" \
 #            "sudo sh ./cuda_12.1.0_530.30.02_linux.run --silent --driver --toolkit --samples\n" \
 #            "nvidia-smi\n" \
+
+
 
 ###########################
 #
@@ -130,7 +134,11 @@ def get_keypair(conn):
             os.chmod(PRIVATE_KEYPAIR_FILE, 0o400)
             ssh_privkey = PRIVATE_KEYPAIR_FILE
     else:
-        ssh_privkey = "<private key corresponding to existing " + keypair.name + ">"
+        if IMPORT_EXISTING_PUBKEY_FILE != "":
+            ssh_privkey = "<private key corresponding to existing " + IMPORT_EXISTING_PUBKEY_FILE + ">"
+        else:
+            ssh_privkey = PRIVATE_KEYPAIR_FILE
+
 
     return keypair, ssh_privkey
 
@@ -145,12 +153,18 @@ flavor = conn.compute.find_flavor(FLAVOR_NAME)
 network = conn.network.find_network(NETWORK_NAME)
 keypair, ssh_privkey = get_keypair(conn)
 
+# print("Image: %s" % image)
+# print("Flavor: %s" % flavor)
+# print("Network: %s" % network)
+# print("Keypair: %s" % keypair)
+
 # Boot a server, wait for it to boot, and then do whatever is needed
 # to get a public IP address for it.
 
 # delete server if it already exists
 # conn.delete_server(INSTANCE_NAME)
 
+# TODO: remove auto_ip and search for floating_ip separately?
 server = conn.create_server(
   INSTANCE_NAME, image=image, flavor=flavor, network=network, key_name=keypair.name, userdata=USERDATA, wait=True, auto_ip=True)
 print("Server instance started:\n\n%s" % server)
